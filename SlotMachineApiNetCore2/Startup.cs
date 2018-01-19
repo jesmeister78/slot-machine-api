@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SlotMachineApiNetCore2.Config;
+using Microsoft.EntityFrameworkCore;
 using SlotMachineDomain;
 
 namespace SlotMachineApiNetCore2
@@ -35,6 +36,11 @@ namespace SlotMachineApiNetCore2
             // add domain services
             services.AddTransient<IBetService, BetService>();
             services.AddTransient<ISpinService, SpinService>();
+
+            // add database
+
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=SlotMachineApi.Database;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<SlotMachineContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
