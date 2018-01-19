@@ -8,6 +8,8 @@ namespace SlotMachineDomain
             : base((DbContextOptions) options)
         { }
 
+        public DbSet<GamblingSession> GamblingSessions { get; set; }
+        public DbSet<GrcsResponse> GrcsResponses { get; set; }
         public DbSet<BetRecord> BetRecords { get; set; }
     }
 }

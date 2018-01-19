@@ -13,11 +13,11 @@ namespace SlotMachineApiNetCore2.Controllers
     {
         private readonly IBetService _betService;
         private readonly Params _options;
-        private readonly IBetRecordRepo _repo;
+        private readonly ISlotMachineRepo _repo;
         private readonly ISpinService _spinService;
 
         public ValuesController(IOptions<Params> options, IBetService betService, ISpinService spinService,
-            IBetRecordRepo repo)
+            ISlotMachineRepo repo)
         {
             _options = options.Value;
             _betService = betService;
@@ -28,19 +28,22 @@ namespace SlotMachineApiNetCore2.Controllers
         // GET api/values
         // get the initial symbol map
         // no win result needed
-        [HttpGet]
-        public InitViewModel Get()
+        [HttpGet("{playerId}")]
+        public InitViewModel Get(string playerId)
         {
-            // use max rows if not specified by user
-            var numRows = _options.MaxRows;
-
             // call the ISpinService to get the random Player Group
             var playerGroup = _spinService.GetPlayerGroup();
+
+            var sessionId = StartSession(playerId, playerGroup);
+
+            // use max rows if not specified by user - always max rows for init
+            var numRows = _options.MaxRows;
 
             // call ISpinService to get the spin result
             var spinResult = _spinService.GetSpinResult(numRows, _options.MaxCols);
 
             var result = new InitViewModel();
+            result.SessionId = sessionId;
             result.PlayerGroup = playerGroup;
             result.ResultMap = spinResult.ResultMap;
             result.InitialBalance = _options.InitialBalance;
@@ -49,9 +52,23 @@ namespace SlotMachineApiNetCore2.Controllers
             return result;
         }
 
+        private Guid StartSession(string playerId, PlayerGroup playerGroup)
+        {
+            // start a new gambling session
+            var session = new GamblingSession();
+            session.SessionId = new Guid();
+            session.PlayerId = playerId;
+            session.InitialBalance = _options.InitialBalance;
+            session.SessionStart = DateTime.Now;
+            session.TimerInterval = _options.TimerInterval;
+            _repo.AddGamblingSession(session);
+            _repo.Commit();
+            return session.SessionId;
+        }
+
         // GET api/values/5
         [HttpGet("{userBet}/{userNumRows}")]
-        public BetResultViewModel Get(double? userBet, int? userNumRows)
+        public BetResultViewModel Get(double? userBet, int? userNumRows, Guid sessionId)
         {
             // use max rows if not specified by user
             var numRows = userNumRows ?? _options.MaxRows;

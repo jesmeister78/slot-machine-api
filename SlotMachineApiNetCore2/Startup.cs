@@ -36,7 +36,7 @@ namespace SlotMachineApiNetCore2
             // add domain services
             services.AddTransient<IBetService, BetService>();
             services.AddTransient<ISpinService, SpinService>();
-            services.AddTransient<IBetRecordRepo, BetRecordRepo>();
+            services.AddTransient<ISlotMachineRepo, SlotMachineRepo>();
 
             // add database
 
