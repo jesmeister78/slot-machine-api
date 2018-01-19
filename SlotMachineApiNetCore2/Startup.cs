@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SlotMachineApiNetCore2.Config;
+using SlotMachineDomain;
 
 namespace SlotMachineApiNetCore2
 {
@@ -23,7 +25,16 @@ namespace SlotMachineApiNetCore2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add framework services.
             services.AddMvc();
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()));
+            services.AddOptions();
+            services.Configure<Params>(Configuration);
+            // add domain services
+            services.AddTransient<IBetService, BetService>();
+            services.AddTransient<ISpinService, SpinService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +44,8 @@ namespace SlotMachineApiNetCore2
             {
                 app.UseDeveloperExceptionPage();
             }
+            // global policy - assign here or on each controller
+            app.UseCors("AllowAll");
 
             app.UseMvc();
         }

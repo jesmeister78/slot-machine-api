@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SlotMachineApiNetCore2.Config
+{
+    public class Params
+    {
+        public int MaxRows { get; set; }
+        public int MaxCols { get; set; }
+        public double DefaultBetAmount { get; set; }
+        public double PayoutRatio { get; set; }
+        public double InitialBalance { get; set; }
+        public int TimerInterval { get; set; }
+    }
+}
