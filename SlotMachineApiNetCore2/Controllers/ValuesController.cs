@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SlotMachineApiNetCore2.Config;
@@ -13,15 +11,18 @@ namespace SlotMachineApiNetCore2.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private readonly Params _options;
         private readonly IBetService _betService;
+        private readonly Params _options;
+        private readonly IBetRecordRepo _repo;
         private readonly ISpinService _spinService;
 
-        public ValuesController(IOptions<Params> options, IBetService betService, ISpinService spinService)
+        public ValuesController(IOptions<Params> options, IBetService betService, ISpinService spinService,
+            IBetRecordRepo repo)
         {
             _options = options.Value;
             _betService = betService;
             _spinService = spinService;
+            _repo = repo;
         }
 
         // GET api/values
@@ -66,30 +67,37 @@ namespace SlotMachineApiNetCore2.Controllers
             // call IBetService to get the result for the bet amount
             var winAmount = _betService.GetWinResult(scores, bet, numRows, payoutRatio);
 
-            var result = new BetResultViewModel();
-            result.ResultMap = spinResult.ResultMap;
-            result.SymbolScores = scores;
-            result.WinAmount = winAmount;
+            var result = new BetResultViewModel
+            {
+                ResultMap = spinResult.ResultMap,
+                SymbolScores = scores,
+                WinAmount = winAmount
+            };
 
             return result;
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] IEnumerable<BetRecordViewModel> bets)
         {
-        }
+            foreach (var value in bets)
+            {
+                var bet = new BetRecord
+                {
+                    PlayerId = value.PlayerId,
+                    Balance = value.Balance,
+                    BetAmount = value.BetAmount,
+                    NumRows = value.NumRows,
+                    Timestamp = DateTime.Now,
+                    WinAmount = value.WinAmount
+                };
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+                _repo.AddBetRecord(bet);
+            }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            _repo.Commit();
         }
+        
     }
 }
