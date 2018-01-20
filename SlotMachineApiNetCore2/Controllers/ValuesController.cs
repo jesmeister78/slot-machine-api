@@ -58,6 +58,7 @@ namespace SlotMachineApiNetCore2.Controllers
             var session = new GamblingSession();
             session.SessionId = new Guid();
             session.PlayerId = playerId;
+            session.PlayerGroup = playerGroup;
             session.InitialBalance = _options.InitialBalance;
             session.SessionStart = DateTime.Now;
             session.TimerInterval = _options.TimerInterval;
@@ -67,7 +68,7 @@ namespace SlotMachineApiNetCore2.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{userBet}/{userNumRows}")]
+        [HttpGet("{userBet}/{userNumRows}/{sessionId}")]
         public BetResultViewModel Get(double? userBet, int? userNumRows, Guid sessionId)
         {
             // use max rows if not specified by user
@@ -83,17 +84,26 @@ namespace SlotMachineApiNetCore2.Controllers
 
             // call IBetService to get the result for the bet amount
             var winAmount = _betService.GetWinResult(scores, bet, numRows, payoutRatio);
+            var prevBet = _repo.GetPreviousBetRecordForSession(sessionId);
+            var prevBalance = prevBet?.Balance ?? _options.InitialBalance;
+
+            // create a bet record
+            var betRecord = _betService.CreateBetRecord(sessionId, bet, numRows, winAmount, prevBalance);
+            // add to db
+            _repo.AddBetRecord(betRecord);
+            _repo.Commit();
 
             var result = new BetResultViewModel
             {
                 ResultMap = spinResult.ResultMap,
                 SymbolScores = scores,
-                WinAmount = winAmount
+                WinAmount = betRecord.GetWinResult()
             };
 
             return result;
         }
 
+       
         // POST api/values
         [HttpPost]
         public void Post([FromBody] IEnumerable<BetRecordViewModel> bets)
@@ -102,7 +112,6 @@ namespace SlotMachineApiNetCore2.Controllers
             {
                 var bet = new BetRecord
                 {
-                    PlayerId = value.PlayerId,
                     Balance = value.Balance,
                     BetAmount = value.BetAmount,
                     NumRows = value.NumRows,

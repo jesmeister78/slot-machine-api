@@ -1,4 +1,7 @@
-﻿namespace SlotMachineDomain
+﻿using System;
+using System.Linq;
+
+namespace SlotMachineDomain
 {
     public class SlotMachineRepo : ISlotMachineRepo
     {
@@ -11,34 +14,29 @@
 
         public void AddBetRecord(BetRecord bet)
         {
-            using (var context = _context)
-            {
-                context.BetRecords.Add(bet);
-            }
+            _context.BetRecords.Add(bet);
+        }
+
+        public BetRecord GetPreviousBetRecordForSession(Guid sessionId)
+        {
+            var betRecord = _context.BetRecords.Where(x => x.SessionId == sessionId)
+                .OrderByDescending(t => t.Timestamp).Take(1).FirstOrDefault();
+            return betRecord;
         }
 
         public void AddGamblingSession(GamblingSession session)
         {
-            using (var context = _context)
-            {
-                context.GamblingSessions.Add(session);
-            }
+            _context.GamblingSessions.Add(session);
         }
 
         public void AddGrcsResponse(GrcsResponse response)
         {
-            using (var context = _context)
-            {
-                context.GrcsResponses.Add(response);
-            }
+            _context.GrcsResponses.Add(response);
         }
 
         public void Commit()
         {
-            using (var context = _context)
-            {
-                context.SaveChanges();
-            }
+            _context.SaveChanges();
         }
     }
 }

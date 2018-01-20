@@ -11,9 +11,10 @@ using System;
 namespace SlotMachineDomain.Migrations
 {
     [DbContext(typeof(SlotMachineContext))]
-    partial class SlotMachineContextModelSnapshot : ModelSnapshot
+    [Migration("20180120042936_RemovePlayerIdFromBetRecord")]
+    partial class RemovePlayerIdFromBetRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

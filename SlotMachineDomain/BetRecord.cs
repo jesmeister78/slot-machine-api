@@ -12,7 +12,6 @@ namespace SlotMachineDomain
         [Key]
         public Guid BetId { get; set; }
         public Guid SessionId { get; set; }
-        public string PlayerId { get; set; }
         public int NumRows { get; set; }
         public double BetAmount { get; set; }
         public double WinAmount { get; set; }
@@ -20,5 +19,17 @@ namespace SlotMachineDomain
         public DateTime Timestamp { get; set; }
         [ForeignKey("SessionId")]
         public GamblingSession Session { get; set; }
+
+        public double AmountSpent => BetAmount * NumRows;
+
+        public void UpdateBalance(double prevBalance)
+        {
+            Balance = prevBalance - AmountSpent + WinAmount;
+        }
+
+        public double GetWinResult()
+        {
+            return WinAmount - AmountSpent;
+        }
     }
 }

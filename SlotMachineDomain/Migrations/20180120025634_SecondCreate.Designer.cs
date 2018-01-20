@@ -11,9 +11,10 @@ using System;
 namespace SlotMachineDomain.Migrations
 {
     [DbContext(typeof(SlotMachineContext))]
-    partial class SlotMachineContextModelSnapshot : ModelSnapshot
+    [Migration("20180120025634_SecondCreate")]
+    partial class SecondCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +31,8 @@ namespace SlotMachineDomain.Migrations
                     b.Property<double>("BetAmount");
 
                     b.Property<int>("NumRows");
+
+                    b.Property<string>("PlayerId");
 
                     b.Property<Guid>("SessionId");
 
