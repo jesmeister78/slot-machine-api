@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SlotMachineApiNetCore2.Config;
 using Microsoft.EntityFrameworkCore;
-using SlotMachineDomain;
+using SlotMachineApiNetCore2.Model;
 
 namespace SlotMachineApiNetCore2
 {

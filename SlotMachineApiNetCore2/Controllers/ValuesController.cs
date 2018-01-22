@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SlotMachineApiNetCore2.Config;
+using SlotMachineApiNetCore2.Model;
 using SlotMachineApiNetCore2.ViewModels;
-using SlotMachineDomain;
 
 namespace SlotMachineApiNetCore2.Controllers
 {
