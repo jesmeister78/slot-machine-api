@@ -32,8 +32,6 @@ namespace SlotMachineApiNetCore2.Model
         {
             var result = new SymbolType[NumRows, NumCols];
 
-            var random = new Random();
-
             for (var col = 0; col < NumCols; col++)
             {
                 var reel = GetRandomisedReel();

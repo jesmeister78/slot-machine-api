@@ -8,8 +8,8 @@ namespace SlotMachineApiNetCore2.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BetRecords",
-                columns: table => new
+                "BetRecords",
+                table => new
                 {
                     PlayerId = table.Column<string>(nullable: false),
                     Balance = table.Column<double>(nullable: false),
@@ -18,16 +18,13 @@ namespace SlotMachineApiNetCore2.Migrations
                     Timestamp = table.Column<DateTime>(nullable: false),
                     WinAmount = table.Column<double>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BetRecords", x => x.PlayerId);
-                });
+                constraints: table => { table.PrimaryKey("PK_BetRecords", x => x.PlayerId); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BetRecords");
+                "BetRecords");
         }
     }
 }

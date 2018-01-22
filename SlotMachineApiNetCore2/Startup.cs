@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SlotMachineApiNetCore2.Config;
-using Microsoft.EntityFrameworkCore;
 using SlotMachineApiNetCore2.Model;
 
 namespace SlotMachineApiNetCore2
@@ -40,7 +34,8 @@ namespace SlotMachineApiNetCore2
 
             // add database
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=SlotMachineApi.Database;Trusted_Connection=True;ConnectRetryCount=0";
+            var connection =
+                @"Server=(localdb)\mssqllocaldb;Database=SlotMachineApi.Database;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<SlotMachineContext>(options => options.UseSqlServer(connection));
         }
 
@@ -48,9 +43,7 @@ namespace SlotMachineApiNetCore2
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             // global policy - assign here or on each controller
             app.UseCors("AllowAll");
 
