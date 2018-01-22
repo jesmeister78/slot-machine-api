@@ -106,20 +106,21 @@ namespace SlotMachineApiNetCore2.Controllers
        
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] IEnumerable<BetRecordViewModel> bets)
+        [Route("grcs")]
+        public void Post([FromBody] IEnumerable<NewGrcsResponseCommand> createResponseCommands)
         {
-            foreach (var value in bets)
+            foreach (var cmd in createResponseCommands)
             {
-                var bet = new BetRecord
+                var response = new GrcsResponse
                 {
-                    Balance = value.Balance,
-                    BetAmount = value.BetAmount,
-                    NumRows = value.NumRows,
-                    Timestamp = DateTime.Now,
-                    WinAmount = value.WinAmount
+                    GrcsResponseId = Guid.NewGuid(),
+                    QuestionId = cmd.QuestionId,
+                    SessionId = cmd.SessionId,
+                    Answer = cmd.Answer,
+                    NumMinutesPlayed = cmd.NumMinutesPlayed
                 };
 
-                _repo.AddBetRecord(bet);
+                _repo.Add(response);
             }
 
             _repo.Commit();

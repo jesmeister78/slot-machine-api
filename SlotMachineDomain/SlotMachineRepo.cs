@@ -34,6 +34,12 @@ namespace SlotMachineDomain
             _context.GrcsResponses.Add(response);
         }
 
+        public void Add<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            _context.Set<TEntity>().Add(entity);
+        }
+
         public void Commit()
         {
             _context.SaveChanges();
