@@ -35,12 +35,9 @@ namespace SlotMachineApiNetCore2.Controllers
             var playerGroup = _spinService.GetPlayerGroup();
 
             var sessionId = StartSession(playerId, playerGroup);
-
-            // use max rows if not specified by user - always max rows for init
-            var numRows = _options.MaxRows;
-
+            
             // call ISpinService to get the spin result
-            var spinResult = _spinService.GetSpinResult(numRows, _options.MaxCols);
+            var spinResult = _spinService.GetSpinResult(_options.MaxRows, _options.MaxCols);
 
             var result = new InitViewModel();
             result.SessionId = sessionId;
@@ -48,6 +45,8 @@ namespace SlotMachineApiNetCore2.Controllers
             result.ResultMap = spinResult.ResultMap;
             result.InitialBalance = _options.InitialBalance;
             result.TimerInterval = _options.TimerInterval;
+            result.DefaultBetAmount = _options.DefaultBetAmount;
+            result.DefaultNumRows = _options.MaxRows;
 
             return result;
         }
@@ -103,7 +102,7 @@ namespace SlotMachineApiNetCore2.Controllers
             return result;
         }
 
-       
+
         // POST api/values
         [HttpPost]
         [Route("grcs")]
@@ -125,6 +124,5 @@ namespace SlotMachineApiNetCore2.Controllers
 
             _repo.Commit();
         }
-        
     }
 }
