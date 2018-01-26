@@ -35,7 +35,7 @@ namespace SlotMachineApiNetCore2.Controllers
             var playerGroup = _spinService.GetPlayerGroup();
 
             var sessionId = StartSession(playerId, playerGroup);
-            
+
             // call ISpinService to get the spin result
             var spinResult = _spinService.GetSpinResult(_options.MaxRows, _options.MaxCols);
 
@@ -49,6 +49,30 @@ namespace SlotMachineApiNetCore2.Controllers
             result.DefaultNumRows = _options.MaxRows;
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("finalise")]
+        public SaveResponseViewModel Post([FromBody] EndSessionCommand cmd)
+        {
+            var response = new SaveResponseViewModel();
+            // get the session that we are finalising
+            var session = _repo.Get<GamblingSession, Guid>(cmd.SessionId);
+
+            if (session != null)
+            {
+                session.FinalBalance = cmd.FinalBalance;
+                session.TotalNumBets = cmd.TotalNumBets;
+                _repo.Commit();
+
+                response.Status = "Session End Success";
+            }
+            else
+            {
+                response.Status = "Session End Fail: Could not find session from id";
+            }
+
+            return response;
         }
 
         private Guid StartSession(string playerId, PlayerGroup playerGroup)
@@ -124,5 +148,12 @@ namespace SlotMachineApiNetCore2.Controllers
 
             _repo.Commit();
         }
+    }
+
+    public class EndSessionCommand
+    {
+        public Guid SessionId { get; set; }
+        public double FinalBalance { get; set; }
+        public int TotalNumBets { get; set; }
     }
 }

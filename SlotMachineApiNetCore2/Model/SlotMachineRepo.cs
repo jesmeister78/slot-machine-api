@@ -34,6 +34,13 @@ namespace SlotMachineApiNetCore2.Model
             _context.GrcsResponses.Add(response);
         }
 
+        public TEntity Get<TEntity, TKey>(TKey key)
+            where TEntity : class
+        {
+            var entity = _context.Set<TEntity>().Find(key);
+            return entity;
+        }
+
         public void Add<TEntity>(TEntity entity)
             where TEntity : class
         {
