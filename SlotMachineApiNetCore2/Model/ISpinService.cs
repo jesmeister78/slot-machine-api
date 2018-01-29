@@ -6,7 +6,7 @@ namespace SlotMachineApiNetCore2.Model
     {
         SpinResult GetSpinResult(int numRows, int numCols);
         Dictionary<SymbolType, int> CalculateScore(SpinResult spinResult);
-
+        Dictionary<SymbolType, int> CalculateScoreSingleRow(SpinResult spinResult);
         PlayerGroup GetPlayerGroup();
     }
 }

@@ -101,7 +101,7 @@ namespace SlotMachineApiNetCore2.Controllers
 
             // call ISpinService to get the spin result
             var spinResult = _spinService.GetSpinResult(numRows, _options.MaxCols);
-            var scores = _spinService.CalculateScore(spinResult);
+            var scores = _spinService.CalculateScoreSingleRow(spinResult);
             // get payout ratio from config
             var payoutRatio = _options.PayoutRatio;
 
