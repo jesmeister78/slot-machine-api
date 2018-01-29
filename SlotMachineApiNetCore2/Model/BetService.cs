@@ -10,7 +10,7 @@ namespace SlotMachineApiNetCore2.Model
         {
             double winTotal = 0;
             var numSymbols = Enum.GetNames(typeof(SymbolType)).Length;
-            var denominator = numSymbols; // / (double)numRows; we are only doing matches on 1 row now
+            var denominator = numSymbols/2; // / (double)numRows; we are only doing matches on 1 row now
 
             // add up win result for each symbol
             foreach (SymbolType symbol in Enum.GetValues(typeof(SymbolType)))
