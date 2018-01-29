@@ -18,7 +18,7 @@ namespace SlotMachineApiNetCore2.Model
                 var numMatches = !spinResult.ContainsKey(symbol) ? 0 : spinResult[symbol];
                 if (numMatches > 0)
                 {
-                    winTotal += Math.Pow(denominator, numMatches) * payoutRatio;
+                    winTotal += (Math.Pow(denominator, numMatches) * betAmount * payoutRatio);
                 }
             }
             
