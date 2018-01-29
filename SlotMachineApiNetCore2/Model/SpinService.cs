@@ -50,7 +50,7 @@ namespace SlotMachineApiNetCore2.Model
 
                 // no point calculating the score if the current score is already bigger than the next possible score
                 if (currentSymbolScore < spinResult.NumCols - colIndex)
-                    currentSymbolScore = GetScoreForSymbolSingleRow(spinResult, curSymbol, rowIndex, ++colIndex, 1);
+                    currentSymbolScore = GetScoreForSymbolSingleRow(spinResult, curSymbol, rowIndex, colIndex+1, 0);
 
                 score[curSymbol] = currentSymbolScore > score[curSymbol] ? currentSymbolScore : score[curSymbol];
             }

@@ -16,7 +16,10 @@ namespace SlotMachineApiNetCore2.Model
             foreach (SymbolType symbol in Enum.GetValues(typeof(SymbolType)))
             {
                 var numMatches = !spinResult.ContainsKey(symbol) ? 0 : spinResult[symbol];
-                winTotal += Math.Pow(denominator, numMatches - 1) * payoutRatio;
+                if (numMatches > 0)
+                {
+                    winTotal += Math.Pow(denominator, numMatches) * payoutRatio;
+                }
             }
             
             return Math.Round(winTotal, 2);
