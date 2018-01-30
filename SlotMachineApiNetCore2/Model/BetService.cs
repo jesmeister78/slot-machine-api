@@ -6,11 +6,11 @@ namespace SlotMachineApiNetCore2.Model
     public class BetService : IBetService
     {
        
-        public double GetWinResult(Dictionary<SymbolType, int> spinResult, double betAmount, int numRows, double payoutRatio)
+        public double GetWinResult(Dictionary<SymbolType, int> spinResult, double betAmount, int numRows, int numCols, double payoutRatio)
         {
             double winTotal = 0;
             var numSymbols = Enum.GetNames(typeof(SymbolType)).Length;
-            var denominator = numSymbols/2; // / (double)numRows; we are only doing matches on 1 row now
+            var denominator = numSymbols; // / (double)numRows; we are only doing matches on 1 row now
 
             // add up win result for each symbol
             foreach (SymbolType symbol in Enum.GetValues(typeof(SymbolType)))
@@ -18,7 +18,7 @@ namespace SlotMachineApiNetCore2.Model
                 var numMatches = !spinResult.ContainsKey(symbol) ? 0 : spinResult[symbol];
                 if (numMatches > 0)
                 {
-                    winTotal += (Math.Pow(denominator, numMatches) * betAmount * payoutRatio);
+                    winTotal += (1 / Math.Pow(numSymbols, numMatches)) * (numCols - numMatches) * betAmount * payoutRatio;
                 }
             }
             

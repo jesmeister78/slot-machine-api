@@ -106,7 +106,7 @@ namespace SlotMachineApiNetCore2.Controllers
             var payoutRatio = _options.PayoutRatio;
 
             // call IBetService to get the result for the bet amount
-            var winAmount = _betService.GetWinResult(scores, bet, numRows, payoutRatio);
+            var winAmount = _betService.GetWinResult(scores, bet, numRows, _options.MaxCols, payoutRatio);
             var prevBet = _repo.GetPreviousBetRecordForSession(sessionId);
             var prevBalance = prevBet?.Balance ?? _options.InitialBalance;
 
